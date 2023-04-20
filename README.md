@@ -70,3 +70,61 @@ print(listings_df['neighbourhood'].value_counts().head(10))
 
 print(listings_df['neighbourhood'].value_counts().head(10).plot(kind='bar'))
 plt.show()
+
+'Use a seaborn countplot'
+
+print(sns.countplot(data=listings_df, x='neighbourhood_group'))
+plt.show()
+
+'Use a seaborn countplot with a more complex bar chart with more than a simple bar chart'
+
+print(sns.countplot(data=listings_df, x='neighbourhood_group',hue = 'room_type'))
+plt.show()
+
+'Look into distribution of data, we are also filtering the data to pick up values with only price below 500 to narrow the results to a more visual friendly format'
+affordable_df = listings_df[listings_df['price'] <= 500] 
+
+print(sns.distplot(affordable_df['price']))
+plt.show()
+
+'What is the distribution of flat prices based on the neighbourhood groups'
+
+affordable_df = listings_df[listings_df['price'] <= 500] 
+
+sns.violinplot(data=affordable_df,x='neighbourhood_group',y='price') 
+plt.show()
+
+'Can we plot the listings on a map?'
+
+affordable_df = listings_df[listings_df['price'] <= 500] 
+
+affordable_df.plot(
+  kind = 'scatter',
+  x = 'longitude',
+  y='latitude',
+  c='price',
+  cmap='inferno',
+  colorbar=True,
+  alpha=0.8,
+  figsize=(12,8))
+
+plt.show()
+
+'now lets draw on top of a wikipedia image'
+
+i = urllib.request.urlopen('https://upload.wikimedia.org/wikipedia/commons/e/ec/Neighbourhoods_New_York_City_Map.PNG')
+plt.imshow(plt.imread(i), zorder=0, extent=[-74.258,-73.7,40.49,40.92])
+ax = plt.gca()
+affordable_df.plot(
+  ax=ax,
+  zorder=1,
+  kind = 'scatter',
+  x = 'longitude',
+  y='latitude',
+  c='price',
+  cmap='inferno',
+  colorbar=True,
+  alpha=0.8,
+  figsize=(12,8))
+
+plt.show()
